@@ -3,6 +3,7 @@ import { Bell } from 'lucide-react';
 
 export function TopBar() {
   const user = useAuthStore((s) => s.user);
+  const initial = user?.displayName?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'U';
 
   return (
     <header className="flex items-center justify-between border-b border-border bg-card/50 backdrop-blur-xl px-4 py-3 md:px-6">
@@ -16,7 +17,7 @@ export function TopBar() {
           <Bell size={18} />
         </button>
         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary text-sm font-semibold">
-          {user.name.charAt(0)}
+          {initial}
         </div>
       </div>
     </header>

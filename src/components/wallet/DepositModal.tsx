@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { useWalletStore } from '@/store/walletStore';
+import { SandboxDisclaimer } from '@/components/ui/SandboxDisclaimer';
+import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface DepositModalProps {
@@ -20,6 +22,7 @@ export function DepositModal({ open, onClose }: DepositModalProps) {
     const num = parseFloat(amount);
     if (isNaN(num) || num <= 0) return;
     deposit(currency, num);
+    toast({ title: 'Depósito simulado completado', description: `${num} ${currency} añadidos a tu cuenta (sandbox).` });
     setSuccess(true);
     setTimeout(() => {
       setSuccess(false);
@@ -37,6 +40,7 @@ export function DepositModal({ open, onClose }: DepositModalProps) {
         </div>
       ) : (
         <div className="space-y-4">
+          <SandboxDisclaimer message="Este depósito es simulado. No se procesará dinero real." />
           <div>
             <label className="text-sm font-medium text-muted-foreground mb-2 block">Moneda</label>
             <div className="flex gap-2">
