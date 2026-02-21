@@ -32,27 +32,28 @@ Do not use Akru for real investing or with real money.
 
 ## Features
 
-- **Firebase Authentication** — Login, Register, Reset Password, and optional Google sign-in.
-- **Protected routes** — App shell and core pages require authentication.
-- **Dark / Light mode** — Theme support for a comfortable experience.
-- **Spot-only simulated trading** — Browse and “trade” mock assets (crypto, ETFs, Venezuela).
-- **Mock market data** — Static or simulated prices for demo.
+- **Firebase Authentication** — Login and Register as **modals** (no dedicated routes); Forgot Password as a **full screen** at `/forgot-password`. Optional Google sign-in.
+- **Public routes** — Market at `/` (main index) and Markets at `/markets` are visible to everyone.
+- **Private routes** — Portfolio (`/app/portfolio`), Wallet (`/app/wallet`), KYC (`/app/kyc`), and Profile (`/app/profile`) require authentication.
+- **Top navbar** — Mercado, Portafolio, Wallet, KYC; top-right shows Profile when logged in, or “Iniciar sesión” / “Registrarse” when not.
+- **Dark / Light mode** — Theme support.
+- **Spot-only simulated trading** — Market table with mock assets (crypto, ETFs, Venezuela), sparklines, and basic sorting.
+- **Portfolio summary** — Private page with total balance, 24h change, breakdown (Crypto / ETFs / Venezuela), and “Recargar” link to Wallet.
 - **Wallet with simulated balances** — Simulated deposits and balances by currency.
-- **Transaction history** — In-app record of simulated movements.
 - **KYC demo flow** — Simulated verification (auto-approved in sandbox).
 
 ---
 
 ## Tech stack
 
-| Layer        | Technology   |
-| ------------ | ----------- |
-| Build       | Vite        |
-| UI          | React       |
-| Language    | TypeScript  |
-| Styling     | Tailwind CSS |
-| Auth        | Firebase    |
-| State       | Zustand     |
+| Layer     | Technology  |
+| --------- | ---------- |
+| Build     | Vite       |
+| UI        | React      |
+| Language  | TypeScript |
+| Styling   | Tailwind CSS |
+| Auth      | Firebase   |
+| State     | Zustand    |
 
 ---
 
@@ -60,32 +61,32 @@ Do not use Akru for real investing or with real money.
 
 ```
 src/
-  assets/     # Images, icons, SVGs (e.g. logo, Google icon)
-  config/     # App config (e.g. Firebase initialization)
-  constants/  # Route paths, nav items, i18n-style constants
-  components/ # Reusable UI and layout (auth, layout, market, wallet, ui)
-  data/       # Mock market and asset data (crypto, ETFs, Venezuela)
-  hooks/      # Global hooks (e.g. useAuth, useToast)
-  interfaces/ # Shared TypeScript interfaces
-  lib/        # Small utilities (e.g. cn, theme helpers)
-  navigator/  # React Router config (AuthRoutes, CoreRoutes, router)
-  pages/      # Route-level screens (Auth: Login, Register, ForgotPassword; Core: Home, Markets, Wallet, Profile, KYC)
-  store/      # Zustand stores (auth, wallet, market, ui)
-  utils/      # Helpers (e.g. Firebase error mapping, API client)
+  assets/      # Images, icons, SVGs (logo, Google icon)
+  config/      # App config (Firebase initialization)
+  constants/   # Route paths, nav items
+  components/  # UI and layout (auth modals, layout, market, wallet, ui)
+  contexts/    # React context (e.g. AuthModalContext for login/register modals)
+  data/        # Mock market and asset data (crypto, ETFs, Venezuela)
+  hooks/       # Global hooks (useAuth, useLogin, useRegister, useToast)
+  interfaces/  # Shared TypeScript interfaces
+  lib/         # Small utilities (cn, theme helpers)
+  navigator/   # React Router (AuthRoutes, CoreRoutes, router)
+  pages/       # Screens: Auth (ForgotPassword only); Core (Home, Markets, Portfolio, Wallet, Profile, KYC, NotFound)
+  store/       # Zustand stores (auth, wallet, market, ui)
+  utils/       # Helpers (Firebase error mapping, API client)
 ```
 
 - **assets** — Static assets.
-- **config** — Firebase and other app-wide configuration.
-- **constants** — Centralized routes, navigation items, and similar constants.
-- **components** — Shared components and layout building blocks.
-- **data** — Mock datasets for markets and assets.
-- **hooks** — Shared React hooks (auth, toast, etc.).
-- **interfaces** — Shared types/interfaces.
-- **lib** — Lightweight utilities used across the app.
-- **navigator** — Routing setup and route definitions.
-- **pages** — Page components grouped by area (Auth vs Core).
-- **store** — Global state (Zustand).
-- **utils** — Domain-oriented helpers (errors, API, etc.).
+- **config** — Firebase and app-wide configuration.
+- **constants** — Routes and navigation items.
+- **components** — Reusable UI: auth (LoginModal, RegisterModal), layout (MainLayout, TopNav, BottomNav), market (MarketTable, PortfolioSummary, SparklineChart), wallet, ui.
+- **contexts** — Auth modal state (open/close login or register modal, switch between them).
+- **data** — Mock assets with price, changes, marketCap, volume, priceHistory for sparklines.
+- **hooks** — useAuth, useLogin, useRegister, useToast, etc.
+- **navigator** — Public routes (/, /markets), auth route (/forgot-password), protected routes (/app/portfolio, /app/wallet, /app/kyc, /app/profile).
+- **pages** — Auth: only ForgotPassword. Core: Home (market table), Markets, Portfolio (summary), Wallet, Profile, KYC, NotFound.
+- **store** — Global state.
+- **utils** — Domain helpers.
 
 ---
 
@@ -101,15 +102,15 @@ npm install
 npm run dev
 ```
 
-The app will run locally (e.g. `http://localhost:5173` with Vite).
+The app runs locally (e.g. `http://localhost:5173` with Vite).
 
 ### Firebase setup
 
-Authentication is handled by Firebase. Configure your project in:
+Authentication uses Firebase. Configure your project in:
 
 - **`src/config/firebase.ts`**
 
-Add your Firebase config (API key, project ID, etc.). You can use environment variables (e.g. `import.meta.env.VITE_*`) and reference them in `firebase.ts` so credentials are not committed.
+Add your Firebase config (API key, project ID, etc.). Prefer environment variables (e.g. `import.meta.env.VITE_*`) in `firebase.ts` so credentials are not committed.
 
 Without valid Firebase config, login, register, and password reset will not work.
 
@@ -117,13 +118,13 @@ Without valid Firebase config, login, register, and password reset will not work
 
 ## Scripts
 
-| Command         | Description              |
-| --------------- | ------------------------ |
-| `npm run dev`   | Start dev server         |
-| `npm run build` | Production build         |
-| `npm run preview` | Preview production build |
-| `npm run lint`  | Run ESLint               |
-| `npm run test`  | Run tests                |
+| Command           | Description                |
+| ----------------- | -------------------------- |
+| `npm run dev`     | Start dev server           |
+| `npm run build`   | Production build           |
+| `npm run preview` | Preview production build   |
+| `npm run lint`    | Run ESLint                 |
+| `npm run test`    | Run tests                  |
 
 ---
 
@@ -131,11 +132,10 @@ Without valid Firebase config, login, register, and password reset will not work
 
 Possible future improvements (no commitment):
 
-- Real or live price feeds (still in sandbox mode).
-- Real backend API for persistence and consistency.
-- More realistic wallet engine (simulated ledger, PnL).
-- Richer charting and market views.
-- Portfolio analytics and performance views.
+- Real or live price feeds (still sandbox).
+- Real backend API for persistence.
+- Richer portfolio analytics and performance views.
+- Improved charting and market views.
 
 ---
 
