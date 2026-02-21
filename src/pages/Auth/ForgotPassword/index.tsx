@@ -58,8 +58,8 @@ export function ForgotPasswordPage() {
       </Button>
 
       <p className="text-center text-xs text-muted-foreground">
-        <Link to={ROUTES.LOGIN} className="text-primary hover:underline">
-          Volver al login
+        <Link to={ROUTES.ROOT} className="text-primary hover:underline">
+          Volver al inicio
         </Link>
       </p>
     </form>

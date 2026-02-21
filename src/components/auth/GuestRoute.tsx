@@ -10,5 +10,5 @@ export function GuestRoute() {
     return <LoadingScreen />;
   }
 
-  return isAuthenticated ? <Navigate to={ROUTES.HOME} replace /> : <Outlet />;
+  return isAuthenticated ? <Navigate to={ROUTES.ROOT} replace /> : <Outlet />;
 }

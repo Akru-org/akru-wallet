@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
-import { AppShell } from "@/components/layout/AppShell";
+import { MainLayout } from "@/components/layout/MainLayout";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import {
   HomePage,
@@ -8,24 +8,26 @@ import {
   WalletPage,
   ProfilePage,
   KYCPage,
+  PortfolioPage,
 } from "@/pages/Core";
 import { ROUTES } from "@/constants/routes";
 
 export const coreRoutes: RouteObject[] = [
   {
-    element: <ProtectedRoute />,
+    element: <MainLayout />,
     children: [
+      { index: true, element: <HomePage /> },
+      { path: "markets", element: <Navigate to={ROUTES.MARKETS_GENERAL} replace /> },
+      { path: "markets/:tab", element: <MarketsPage /> },
       {
-        path: ROUTES.APP.slice(1),
-        element: <AppShell />,
+        path: "app",
+        element: <ProtectedRoute />,
         children: [
-          { index: true, element: <Navigate to={ROUTES.HOME} replace /> },
-          { path: ROUTES.HOME.replace(`${ROUTES.APP}/`, ""), element: <HomePage /> },
-          { path: "markets/:tab", element: <MarketsPage /> },
-          { path: "markets", element: <Navigate to={ROUTES.MARKETS_GENERAL} replace /> },
-          { path: ROUTES.WALLET.replace(`${ROUTES.APP}/`, ""), element: <WalletPage /> },
-          { path: ROUTES.PROFILE.replace(`${ROUTES.APP}/`, ""), element: <ProfilePage /> },
-          { path: ROUTES.KYC.replace(`${ROUTES.APP}/`, ""), element: <KYCPage /> },
+          { index: true, element: <Navigate to={ROUTES.PORTFOLIO} replace /> },
+          { path: "portfolio", element: <PortfolioPage /> },
+          { path: "wallet", element: <WalletPage /> },
+          { path: "kyc", element: <KYCPage /> },
+          { path: "profile", element: <ProfilePage /> },
         ],
       },
     ],

@@ -1,10 +1,16 @@
 export interface Asset {
+  id: string;
   symbol: string;
   name: string;
   price: number;
+  change1h: number;
   change24h: number;
+  change7d: number;
+  marketCap: number;
+  volume24h: number;
   currency: string;
   category: AssetCategory;
+  priceHistory: number[];
   icon?: string;
 }
 

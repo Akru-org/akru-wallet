@@ -7,6 +7,7 @@ import { router } from "@/navigator";
 import { useEffect } from "react";
 import { useUiStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
+import { AuthModalProvider } from "@/contexts/AuthModalContext";
 
 const queryClient = new QueryClient();
 
@@ -29,10 +30,12 @@ function AppInit() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AppInit />
-      <Toaster />
-      <Sonner />
-      <RouterProvider router={router} />
+      <AuthModalProvider>
+        <AppInit />
+        <Toaster />
+        <Sonner />
+        <RouterProvider router={router} />
+      </AuthModalProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

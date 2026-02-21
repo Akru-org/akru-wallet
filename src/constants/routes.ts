@@ -1,20 +1,20 @@
 export const ROUTES = {
   ROOT: "/",
 
-  // Auth
-  LOGIN: "/login",
-  REGISTER: "/register",
+  // Auth (forgot-password = screen; login/register = modals)
   FORGOT_PASSWORD: "/forgot-password",
 
-  // App
+  // Public (market = main index)
+  MARKETS: "/markets",
+  MARKETS_GENERAL: "/markets/general",
+  MARKETS_ETFS: "/markets/etfs",
+  MARKETS_CRYPTO: "/markets/crypto",
+  MARKETS_VENEZUELA: "/markets/venezuela",
+
+  // App (private: portfolio, wallet, kyc, profile)
   APP: "/app",
-  HOME: "/app/home",
-  MARKETS: "/app/markets",
-  MARKETS_GENERAL: "/app/markets/general",
-  MARKETS_ETFS: "/app/markets/etfs",
-  MARKETS_CRYPTO: "/app/markets/crypto",
-  MARKETS_VENEZUELA: "/app/markets/venezuela",
+  PORTFOLIO: "/app/portfolio",
   WALLET: "/app/wallet",
-  PROFILE: "/app/profile",
   KYC: "/app/kyc",
+  PROFILE: "/app/profile",
 };

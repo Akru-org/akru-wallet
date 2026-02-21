@@ -19,29 +19,12 @@ function mapFirebaseUser(user: User): { email: string; displayName: string | nul
   };
 }
 
-async function logUserForBackend(user: User) {
-  try {
-    const token = await user.getIdToken();
-    console.log(AUTH_LOG_PREFIX, "Firebase user (para backend):", {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      idToken: token ? `${token.slice(0, 20)}...` : null,
-    });
-    console.log(AUTH_LOG_PREFIX, "idToken completo (copiar si necesitas):", token);
-  } catch (e) {
-    console.warn(AUTH_LOG_PREFIX, "No se pudo obtener idToken:", e);
-  }
-}
-
 export function useAuth() {
   const setAuthUser = useAuthStore((s) => s.setAuthUser);
 
   async function login(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log(AUTH_LOG_PREFIX, "Login email OK:", userCredential.user.email);
-    await logUserForBackend(userCredential.user);
+    console.log(AUTH_LOG_PREFIX, "Login OK:", userCredential.user.email);
     setAuthUser(mapFirebaseUser(userCredential.user));
   }
 
@@ -49,14 +32,12 @@ export function useAuth() {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
     console.log(AUTH_LOG_PREFIX, "Login Google OK:", userCredential.user.email);
-    await logUserForBackend(userCredential.user);
     setAuthUser(mapFirebaseUser(userCredential.user));
   }
 
   async function register(email: string, password: string) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     console.log(AUTH_LOG_PREFIX, "Registro OK:", userCredential.user.email);
-    await logUserForBackend(userCredential.user);
     setAuthUser(mapFirebaseUser(userCredential.user));
   }
 

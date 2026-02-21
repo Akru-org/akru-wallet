@@ -11,7 +11,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-xl md:hidden">
       <div className="flex items-center justify-around py-2">
         {navItems.map((item) => {
-          const active = pathname === item.path || (item.path !== ROUTES.HOME && pathname.startsWith(item.path));
+          const active = pathname === item.path || (item.path !== ROUTES.ROOT && pathname.startsWith(item.path));
           return (
             <Link key={item.path} to={item.path} className={cn('flex flex-col items-center gap-0.5 px-3 py-1 text-xs transition-colors', active ? 'text-primary' : 'text-muted-foreground')}>
               <item.icon size={20} />
@@ -34,7 +34,7 @@ export function SideMenu() {
       </div>
       <nav className="flex-1 p-3 space-y-1">
         {sideNavItems.map((item) => {
-          const active = pathname === item.path || (item.path !== ROUTES.HOME && pathname.startsWith(item.path));
+          const active = pathname === item.path || (item.path !== ROUTES.ROOT && pathname.startsWith(item.path));
           return (
             <Link
               key={item.path}

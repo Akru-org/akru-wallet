@@ -10,5 +10,5 @@ export function ProtectedRoute() {
     return <LoadingScreen message="Cargando..." />;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to={ROUTES.LOGIN} replace />;
+  return isAuthenticated ? <Outlet /> : <Navigate to={`${ROUTES.ROOT}?auth=login`} replace />;
 }
