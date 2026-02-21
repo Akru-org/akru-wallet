@@ -8,7 +8,7 @@ export function useRegister() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
 
   const passwordsMatch = password === confirm;
   const valid = email.includes("@") && password.length >= 6 && passwordsMatch;
@@ -41,6 +41,18 @@ export function useRegister() {
     setConfirm(e.target.value);
   };
 
+  const handleGoogleLogin = async () => {
+    setError(null);
+    setIsSubmitting(true);
+    try {
+      await loginWithGoogle();
+    } catch (e) {
+      setError(FirebaseAuthError.getMessage(e));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return {
     email,
     password,
@@ -50,6 +62,7 @@ export function useRegister() {
     valid,
     passwordsMatch,
     handleSubmit,
+    handleGoogleLogin,
     onEmailChange,
     onPasswordChange,
     onConfirmChange,

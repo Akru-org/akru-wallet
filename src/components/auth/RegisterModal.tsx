@@ -9,6 +9,7 @@ import {
   ErrorMessage,
   Button,
 } from "@/components/ui";
+import googleLogo from "@/assets/cono/google.svg";
 
 interface RegisterModalProps {
   open: boolean;
@@ -32,6 +33,7 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
     valid,
     passwordsMatch,
     handleSubmit,
+    handleGoogleLogin,
     onEmailChange,
     onPasswordChange,
     onConfirmChange,
@@ -79,6 +81,27 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
 
         <Button type="submit" size="form" loading={isSubmitting} loadingLabel="Creando cuenta..." disabled={!valid}>
           Crear Cuenta
+        </Button>
+
+        <div className="relative">
+          <span className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border" />
+          </span>
+          <span className="relative flex justify-center text-xs uppercase text-muted-foreground">
+            o continúa con
+          </span>
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="form"
+          onClick={handleGoogleLogin}
+          loading={isSubmitting}
+          className="gap-2"
+        >
+          <img src={googleLogo} alt="Google" className="size-5" />
+          Iniciar sesión con Google
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
