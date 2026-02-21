@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUiStore } from "@/store/uiStore";
-import { Moon, Sun, User, Mail, Shield, LogOut } from "lucide-react";
+import { KYC_STATUS_LABELS, type KycStatusValue } from "@/constants/kycStatus";
+import { ROUTES } from "@/constants/routes";
+import { Moon, Sun, User, Mail, Shield, LogOut, ShieldCheck } from "lucide-react";
 import {
   AvatarInitial,
   SectionCard,
@@ -20,8 +23,12 @@ export function ProfilePage() {
   const { user } = useAuthStore();
   const { logout } = useAuth();
   const { theme, toggleTheme } = useUiStore();
-  const { alias, updateAlias, isUpdating, error } = useProfile();
+  const { profile, profileLoading, loadProfile, alias, updateAlias, isUpdating, error } = useProfile();
   const [aliasInput, setAliasInput] = useState(alias);
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
 
   useEffect(() => {
     setAliasInput(alias);
@@ -29,6 +36,8 @@ export function ProfilePage() {
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "Usuario";
   const displayEmail = user?.email || "";
+  const kycStatus = profile?.kycStatus ?? null;
+  const kycLabel = kycStatus ? KYC_STATUS_LABELS[kycStatus as KycStatusValue] : "—";
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -46,8 +55,23 @@ export function ProfilePage() {
         <div className="space-y-3">
           <InfoRow icon={<User size={16} />} label="Nombre" value={displayName} />
           <InfoRow icon={<Mail size={16} />} label="Email" value={displayEmail} />
-          <InfoRow icon={<Shield size={16} />} label="Verificación" value="Pendiente" />
+          <InfoRow
+            icon={<Shield size={16} />}
+            label="Verificación (KYC)"
+            value={profileLoading ? "Cargando..." : kycLabel}
+          />
         </div>
+
+        {!profileLoading && (
+          <div className="mt-3">
+            <Link to={ROUTES.KYC}>
+              <Button type="button" variant="outline" size="sm" className="gap-2">
+                <ShieldCheck size={16} />
+                Ir a verificación KYC
+              </Button>
+            </Link>
+          </div>
+        )}
 
         <div className="mt-4 border-t border-border pt-4">
           <FormField label="Alias">
