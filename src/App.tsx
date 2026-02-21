@@ -7,6 +7,7 @@ import { router } from "@/navigator";
 import { useEffect } from "react";
 import { useUiStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
+import { useToken } from "@/hooks/useToken";
 import { AuthModalProvider } from "@/contexts/AuthModalContext";
 
 const queryClient = new QueryClient();
@@ -14,6 +15,8 @@ const queryClient = new QueryClient();
 function AppInit() {
   const theme = useUiStore((s) => s.theme);
   const initAuthListener = useAuthStore((s) => s.initAuthListener);
+
+  useToken();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");

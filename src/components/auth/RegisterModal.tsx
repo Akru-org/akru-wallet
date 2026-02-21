@@ -28,15 +28,14 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
     email,
     password,
     confirm,
+    alias,
     error,
     isSubmitting,
     valid,
     passwordsMatch,
     handleSubmit,
     handleGoogleLogin,
-    onEmailChange,
-    onPasswordChange,
-    onConfirmChange,
+    onFieldChange,
   } = useRegister();
 
   return (
@@ -46,11 +45,20 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
 
         {error && <ErrorMessage message={error} />}
 
+        <FormField label="Alias">
+          <FormInput
+            type="text"
+            value={alias}
+            onChange={onFieldChange("alias")}
+            placeholder="cualquier-alias"
+          />
+        </FormField>
+
         <FormField label="Email">
           <FormInput
             type="email"
             value={email}
-            onChange={onEmailChange}
+            onChange={onFieldChange("email")}
             placeholder="tu@email.com"
             required
           />
@@ -60,7 +68,7 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
           <FormInput
             type="password"
             value={password}
-            onChange={onPasswordChange}
+            onChange={onFieldChange("password")}
             placeholder="Mínimo 6 caracteres"
             required
           />
@@ -73,7 +81,7 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
           <FormInput
             type="password"
             value={confirm}
-            onChange={onConfirmChange}
+            onChange={onFieldChange("confirm")}
             placeholder="Repite tu contraseña"
             required
           />

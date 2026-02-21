@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { useUiStore } from "@/store/uiStore";
 import { Moon, Sun, User, Mail, Shield, LogOut } from "lucide-react";
 import {
@@ -8,12 +10,22 @@ import {
   PageTitle,
   InfoRow,
   DestructiveButton,
+  FormField,
+  FormInput,
+  ErrorMessage,
+  Button,
 } from "@/components/ui";
 
 export function ProfilePage() {
   const { user } = useAuthStore();
   const { logout } = useAuth();
   const { theme, toggleTheme } = useUiStore();
+  const { alias, updateAlias, isUpdating, error } = useProfile();
+  const [aliasInput, setAliasInput] = useState(alias);
+
+  useEffect(() => {
+    setAliasInput(alias);
+  }, [alias]);
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "Usuario";
   const displayEmail = user?.email || "";
@@ -35,6 +47,31 @@ export function ProfilePage() {
           <InfoRow icon={<User size={16} />} label="Nombre" value={displayName} />
           <InfoRow icon={<Mail size={16} />} label="Email" value={displayEmail} />
           <InfoRow icon={<Shield size={16} />} label="Verificación" value="Pendiente" />
+        </div>
+
+        <div className="mt-4 border-t border-border pt-4">
+          <FormField label="Alias">
+            <div className="flex gap-2">
+              <FormInput
+                type="text"
+                value={aliasInput}
+                onChange={(e) => setAliasInput(e.target.value)}
+                placeholder="tu-alias"
+                className="flex"
+              />
+              <Button
+                type="button"
+                size="form"
+                onClick={() => updateAlias(aliasInput)}
+                loading={isUpdating}
+                loadingLabel="Guardando..."
+                disabled={aliasInput.trim() === alias || !aliasInput.trim()}
+              >
+                Guardar
+              </Button>
+            </div>
+          </FormField>
+          {error && <ErrorMessage message={error} className="mt-2" />}
         </div>
       </SectionCard>
 

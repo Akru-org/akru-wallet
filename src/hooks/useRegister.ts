@@ -6,6 +6,7 @@ export function useRegister() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [alias, setAlias] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, loginWithGoogle } = useAuth();
@@ -19,7 +20,7 @@ export function useRegister() {
     setError(null);
     setIsSubmitting(true);
     try {
-      await register(email, password);
+      await register(email, password, alias.trim());
     } catch (e) {
       setError(FirebaseAuthError.getMessage(e));
     } finally {
@@ -27,18 +28,16 @@ export function useRegister() {
     }
   };
 
-  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    setEmail(e.target.value);
+  type RegisterField = "email" | "password" | "confirm" | "alias";
+  const fieldSetters: Record<RegisterField, (v: string) => void> = {
+    email: setEmail,
+    password: setPassword,
+    confirm: setConfirm,
+    alias: setAlias,
   };
-
-  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFieldChange = (key: RegisterField) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
-    setPassword(e.target.value);
-  };
-
-  const onConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirm(e.target.value);
+    fieldSetters[key](e.target.value);
   };
 
   const handleGoogleLogin = async () => {
@@ -57,14 +56,13 @@ export function useRegister() {
     email,
     password,
     confirm,
+    alias,
     error,
     isSubmitting,
     valid,
     passwordsMatch,
     handleSubmit,
     handleGoogleLogin,
-    onEmailChange,
-    onPasswordChange,
-    onConfirmChange,
+    onFieldChange,
   };
 }

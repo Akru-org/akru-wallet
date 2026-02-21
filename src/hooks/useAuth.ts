@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { useAuthStore } from "@/store/authStore";
+import { userService } from "@/services/user.service";
 
 const AUTH_LOG_PREFIX = "[Auth]";
 
@@ -19,26 +20,39 @@ function mapFirebaseUser(user: User): { email: string; displayName: string | nul
   };
 }
 
+async function syncUserAfterAuth(uid: string, email: string, alias: string) {
+  const res = await userService.syncUser({ uid, email, alias });
+  if (res.error || res.status >= 400) {
+    console.warn(AUTH_LOG_PREFIX, "Sync backend failed:", res.error ?? res.status);
+  }
+}
+
 export function useAuth() {
   const setAuthUser = useAuthStore((s) => s.setAuthUser);
 
   async function login(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log(AUTH_LOG_PREFIX, "Login OK:", userCredential.user.email);
-    setAuthUser(mapFirebaseUser(userCredential.user));
+    const user = userCredential.user;
+    console.log(AUTH_LOG_PREFIX, "Login OK:", user.email);
+    await syncUserAfterAuth(user.uid, user.email ?? email, "");
+    setAuthUser(mapFirebaseUser(user));
   }
 
   async function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
-    console.log(AUTH_LOG_PREFIX, "Login Google OK:", userCredential.user.email);
-    setAuthUser(mapFirebaseUser(userCredential.user));
+    const user = userCredential.user;
+    console.log(AUTH_LOG_PREFIX, "Login Google OK:", user.email);
+    await syncUserAfterAuth(user.uid, user.email ?? "", "");
+    setAuthUser(mapFirebaseUser(user));
   }
 
-  async function register(email: string, password: string) {
+  async function register(email: string, password: string, alias = "") {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    console.log(AUTH_LOG_PREFIX, "Registro OK:", userCredential.user.email);
-    setAuthUser(mapFirebaseUser(userCredential.user));
+    const user = userCredential.user;
+    console.log(AUTH_LOG_PREFIX, "Registro OK:", user.email);
+    await syncUserAfterAuth(user.uid, user.email ?? email, alias);
+    setAuthUser(mapFirebaseUser(user));
   }
 
   async function logout() {
