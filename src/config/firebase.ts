@@ -1,15 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
-// TODO: Replace with your actual Firebase project config
 const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_PROJECT.firebaseapp.com',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_PROJECT.appspot.com',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  appId: 'YOUR_APP_ID',
+  apiKey: "AIzaSyATwfz3bCdnMQw4HG5XSxZQp3T6uoBt-2s",
+  authDomain: "coin-control-dev-ded8c.firebaseapp.com",
+  projectId: "coin-control-dev-ded8c",
+  storageBucket: "coin-control-dev-ded8c.firebasestorage.app",
+  messagingSenderId: "477342844675",
+  appId: "1:477342844675:web:26337cc2461017a4024b36",
+  measurementId: "G-91RRVFNSST"
 };
-
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

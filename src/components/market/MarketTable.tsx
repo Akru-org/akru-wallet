@@ -1,5 +1,5 @@
 import { Asset } from '@/types';
-import { AkruBadge } from '@/components/ui/AkruBadge';
+import { AkruBadge } from "@/components/ui";
 import { cn } from '@/lib/utils';
 
 interface MarketTableProps {

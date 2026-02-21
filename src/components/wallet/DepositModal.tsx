@@ -1,20 +1,26 @@
-import { useState } from 'react';
-import { Modal } from '@/components/ui/Modal';
-import { useWalletStore } from '@/store/walletStore';
-import { SandboxDisclaimer } from '@/components/ui/SandboxDisclaimer';
-import { toast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import {
+  Modal,
+  SandboxDisclaimer,
+  FormField,
+  FormInput,
+  Button,
+  SuccessState,
+} from "@/components/ui";
+import { useWalletStore } from "@/store/walletStore";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 interface DepositModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-const currencies = ['USD', 'USDT', 'USDC', 'VES'];
+const currencies = ["USD", "USDT", "USDC", "VES"];
 
 export function DepositModal({ open, onClose }: DepositModalProps) {
-  const [currency, setCurrency] = useState('USD');
-  const [amount, setAmount] = useState('');
+  const [currency, setCurrency] = useState("USD");
+  const [amount, setAmount] = useState("");
   const [success, setSuccess] = useState(false);
   const deposit = useWalletStore((s) => s.deposit);
 
@@ -22,11 +28,14 @@ export function DepositModal({ open, onClose }: DepositModalProps) {
     const num = parseFloat(amount);
     if (isNaN(num) || num <= 0) return;
     deposit(currency, num);
-    toast({ title: 'Depósito simulado completado', description: `${num} ${currency} añadidos a tu cuenta (sandbox).` });
+    toast({
+      title: "Depósito simulado completado",
+      description: `${num} ${currency} añadidos a tu cuenta (sandbox).`,
+    });
     setSuccess(true);
     setTimeout(() => {
       setSuccess(false);
-      setAmount('');
+      setAmount("");
       onClose();
     }, 1500);
   };
@@ -34,49 +43,46 @@ export function DepositModal({ open, onClose }: DepositModalProps) {
   return (
     <Modal open={open} onClose={onClose} title="Recargar">
       {success ? (
-        <div className="py-8 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-success/20 text-success text-xl">✓</div>
-          <p className="font-semibold">¡Depósito exitoso!</p>
-        </div>
+        <SuccessState title="¡Depósito exitoso!" />
       ) : (
         <div className="space-y-4">
           <SandboxDisclaimer message="Este depósito es simulado. No se procesará dinero real." />
-          <div>
-            <label className="text-sm font-medium text-muted-foreground mb-2 block">Moneda</label>
+          <FormField label="Moneda">
             <div className="flex gap-2">
               {currencies.map((c) => (
                 <button
                   key={c}
+                  type="button"
                   onClick={() => setCurrency(c)}
                   className={cn(
-                    'rounded-lg px-4 py-2 text-sm font-medium border transition-all',
+                    "rounded-lg border px-4 py-2 text-sm font-medium transition-all",
                     currency === c
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border text-muted-foreground hover:bg-secondary'
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border text-muted-foreground hover:bg-secondary",
                   )}
                 >
                   {c}
                 </button>
               ))}
             </div>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-muted-foreground mb-2 block">Monto</label>
-            <input
+          </FormField>
+          <FormField label="Monto">
+            <FormInput
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full rounded-lg border border-border bg-secondary/50 px-4 py-3 text-lg font-display font-semibold tabular-nums placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+              className="text-lg font-semibold tabular-nums"
             />
-          </div>
-          <button
+          </FormField>
+          <Button
+            type="button"
+            size="form"
             onClick={handleDeposit}
             disabled={!amount || parseFloat(amount) <= 0}
-            className="w-full rounded-lg bg-primary py-3 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Confirmar Depósito
-          </button>
+          </Button>
         </div>
       )}
     </Modal>
