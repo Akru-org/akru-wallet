@@ -9,7 +9,7 @@ import {
   ErrorMessage,
   Button,
 } from "@/components/ui";
-import googleLogo from "@/assets/cono/google.svg";
+import googleLogo from "@/assets/icons/google.svg";
 
 interface RegisterModalProps {
   open: boolean;

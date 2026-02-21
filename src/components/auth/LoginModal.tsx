@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/authStore";
 import { ROUTES } from "@/constants/routes";
 import { useLogin } from "@/hooks/useLogin";
 import { Modal, FormField, FormInput, ErrorMessage, Button } from "@/components/ui";
-import googleLogo from "@/assets/cono/google.svg";
+import googleLogo from "@/assets/icons/google.svg";
 
 interface LoginModalProps {
   open: boolean;
